@@ -79,4 +79,42 @@ public class BookController2_4 {
 
         return "도서 추가 완료: " + book.getId();
     }
+
+    // 삭체 요청
+    // api/v2-4/books/99 -> 삭제실패 메시지 응답
+    @DeleteMapping("/{id}")
+    public String deleteBook(@PathVariable Long id) {
+
+        Book removed = bookStore.remove(id);
+        if(removed == null) {
+            return id + "번 도서는 존재하지 않습니다. 삭제 실패!";
+        }
+
+        return "도서 삭제 완료! - " + id;
+    }
+
+    //
+    @PutMapping("/{id}")
+    public String updateBook(
+            String title,
+            String author,
+            int price,
+            @PathVariable Long id
+    ) {
+        Book foundBook = bookStore.get(id);
+
+        if(foundBook == null) {
+            return id + "번 도서는 존재하지 않습니다.";
+        }
+
+        foundBook.updateBookInfo(title, author, price);
+
+        return  "도서 수정 완료: id - " + id;
+    }
+
+    // 책이 몇권 저장됐는지 알려주기
+    @GetMapping("/count")
+    public String count() {
+        return "현재 저장된 도서의 개수: " + bookStore.size();
+    }
 }
