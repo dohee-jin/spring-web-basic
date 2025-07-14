@@ -1,4 +1,4 @@
-package com.spring.basic.chap2_4;
+package com.spring.basic.chap2_4.controller;
 
 import com.spring.basic.chap2_4.entity.Book;
 import org.springframework.web.bind.annotation.*;
@@ -25,22 +25,33 @@ public class BookController2_4 {
     }
 
     // 1. 목록 조회
-   /* @GetMapping
-    public List<Book> list() {
-        List<Book> booklist = new ArrayList<>();
-        for (Long key : bookStore.keySet()) {
-            booklist.add(bookStore.get(key));
-        }
-        return booklist;
-    }*/
-
+//    @RequestMapping(method = RequestMethod.GET)
     /*
-        ?sort=[id | title | price]
+        ?sort=[ id | title | price ]
         - 기본값은 id 오름차, title은 가나다순, price는 내림차
-    */
-
+     */
     @GetMapping
-    public List<Book> list(@RequestParam(defaultValue = "id") String sort) {
+    public Map<String, Object> list(@RequestParam(defaultValue = "id") String sort) {
+//        List<Book> bookList = new ArrayList<>();
+//        for (Long key : bookStore.keySet()) {
+//            bookList.add(bookStore.get(key));
+//        }
+
+        List<Book> bookList = new ArrayList<>(bookStore.values())
+                .stream()
+                .sorted(getComparator(sort))
+                .collect(Collectors.toList());
+
+        int count = bookStore.size();
+
+        return Map.of(
+                "count", count,
+                "bookList", bookList
+        );
+
+    }
+
+    private Comparator<Book> getComparator(String sort) {
 
         Comparator<Book> comparing = null;
 
@@ -54,24 +65,25 @@ public class BookController2_4 {
             default:
                 comparing = Comparator.comparing(Book::getId);
         }
-        return new ArrayList<>(bookStore.values())
-                .stream()
-                .sorted(comparing)
-                .collect(Collectors.toUnmodifiableList());
-    };
 
-    // 2. 개별조회
+        return comparing;
+    }
+
+
+    // 2. 개별 조회
     @GetMapping("/{id}")
-    public Book getBook(@PathVariable Long id){
+    public Book getBook(@PathVariable Long id) {
+
         Book foundBook = bookStore.get(id);
+
         return foundBook;
     }
 
-    // 3. 도서생성
+    // 3. 도서 생성
     @PostMapping
     public String createBook(String title, String author, int price) {
 
-        // 새 도서 생성
+        // 새 도서 객체 생성
         Book book = new Book(nextId++, title, author, price);
 
         // 맵에 저장
@@ -80,20 +92,18 @@ public class BookController2_4 {
         return "도서 추가 완료: " + book.getId();
     }
 
-    // 삭체 요청
-    // api/v2-4/books/99 -> 삭제실패 메시지 응답
+    // 삭제 요청   /api/v2-4/books/99  -> 삭제실패 메시지 응답
     @DeleteMapping("/{id}")
     public String deleteBook(@PathVariable Long id) {
 
         Book removed = bookStore.remove(id);
-        if(removed == null) {
+
+        if (removed == null) {
             return id + "번 도서는 존재하지 않습니다. 삭제 실패!";
         }
-
         return "도서 삭제 완료! - " + id;
     }
 
-    //
     @PutMapping("/{id}")
     public String updateBook(
             String title,
@@ -103,18 +113,18 @@ public class BookController2_4 {
     ) {
         Book foundBook = bookStore.get(id);
 
-        if(foundBook == null) {
+        if (foundBook == null) {
             return id + "번 도서는 존재하지 않습니다.";
         }
 
         foundBook.updateBookInfo(title, author, price);
 
-        return  "도서 수정 완료: id - " + id;
+        return "도서 수정 완료: id - " + id;
     }
 
     // 책이 몇권 저장됐는지 알려주기
     @GetMapping("/count")
     public String count() {
-        return "현재 저장된 도서의 개수: " + bookStore.size();
+        return "현재 저장된 도서의 개수: " + bookStore.size() + "권";
     }
 }
