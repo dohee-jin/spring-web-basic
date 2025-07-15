@@ -1,0 +1,64 @@
+package com.spring.basic.chap3_2.entity;
+
+import lombok.*;
+
+import java.util.UUID;
+
+@Getter @Setter @ToString
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+
+public class Member {
+
+    @Builder.Default
+    private String uid = UUID.randomUUID().toString();; // 회원 식별번호
+    private String account;
+    private String password;
+    private String nickname;
+
+
+    // 빌더 패턴 구현 - 생성자를 대체하는 것
+    // 싱글톤 패턴, 빌더 패턴
+
+    /*private Member(Builder builder) {
+        this.uid = UUID.randomUUID().toString();
+        this.account = builder.account;
+        this.password = builder.password;
+        this.nickname = builder.nickname;
+    }*/
+
+    // 내부 클래스
+   /* public static class Builder {
+
+        // 원본 클래스랑 완력하게 동일하게 구성
+        private String uid; // 회원 식별번호
+        private String account;
+        private String password;
+        private String nickname;
+
+        public Builder() {}
+
+        // 필드를 초기화하는 Setter를 자기 필드명과 동일하게 생성
+        public Builder account(String account) {
+            // 자기 자신 객체를 리턴
+            this.account = account;
+            return this;
+        }
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+        public Builder nickname(String nickname) {
+            this.nickname = nickname;
+            return this;
+        }
+
+        // 최종연산에서는 원본 객체를 리턴
+        public Member build() {
+            return new Member(this);
+        }
+    }*/
+
+}
