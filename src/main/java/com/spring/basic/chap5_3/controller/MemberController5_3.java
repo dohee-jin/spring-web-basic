@@ -2,8 +2,10 @@ package com.spring.basic.chap5_3.controller;
 
 import com.spring.basic.chap3_2.entity.Member;
 import com.spring.basic.chap5_3.dto.request.MemberCreateDto;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -84,13 +86,31 @@ public class MemberController5_3 {
 
     // 회원 생성
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody MemberCreateDto dto) {
+    public ResponseEntity<?> create(
+            @RequestBody @Valid MemberCreateDto dto,
+            // 입력값 검증 오류 내용을 갖고있는 객체
+            BindingResult bindingResult
+    ) {
+
+        if(bindingResult.hasErrors()) {
+            // 검증 결과 에러가 있다면
+            Map<String, String> errorMap = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(err -> {
+                errorMap.put(err.getField(), err.getDefaultMessage());
+            });
+
+            log.warn("회원가입 입력값 오류가 발생함!");
+            return ResponseEntity
+                    .badRequest()
+                    .body(errorMap);
+        }
 
         log.info("param - {}", dto);
 
         // 데이터 베이스 저장; UID를 포함, 비밀번호를 인코딩
         // dto -> entity로 변환하는 과정
-        Member member = new Member(dto);
+
+        Member member = MemberCreateDto.from(dto);
 
         memberStore.put(dto.getUserAcc(), member);
 
