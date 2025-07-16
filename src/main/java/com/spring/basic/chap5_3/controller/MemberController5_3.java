@@ -2,16 +2,18 @@ package com.spring.basic.chap5_3.controller;
 
 import com.spring.basic.chap3_2.entity.Member;
 import com.spring.basic.chap5_3.dto.request.MemberCreateDto;
+import com.spring.basic.chap5_4.dto.response.MemberListResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/api/v5-3/members")
@@ -61,16 +63,26 @@ public class MemberController5_3 {
 
         log.info(("/api/v5-3/"));
 
-        List<Member> members = new ArrayList<>(memberStore.values());
+        List<MemberListResponse> responses = memberStore.values()
+                .stream()
+                .map(MemberListResponse::from)
+                .collect(toList());
 
-        log.debug("members.size = {}", members.size());
+        /*List<Member> members = new ArrayList<>(memberStore.values());
+        List<MemberListResponse> responses = new ArrayList<>();
 
-        if (members.size() <= 0) {
+        for(Member m : members) {
+           responses.add(MemberListResponse.from(m));
+        }*/
+
+        log.debug("members.size = {}", responses.size());
+
+        if (responses.size() <= 0) {
             log.warn("회원 데이터가 없습니다.");
             return ResponseEntity.notFound().build();
         }
 
-        log.debug("members[0].nickname = {}", members.get(0).getNickname());
+        log.debug("members[0].nickname = {}", responses.get(0).getNick());
         try {
 
         } catch (Exception e) {
@@ -81,7 +93,7 @@ public class MemberController5_3 {
         log.trace("memberList 메서드 호출 종료됨");
         return ResponseEntity
                 .ok()
-                .body(members);
+                .body(responses);
     }
 
     // 회원 생성
