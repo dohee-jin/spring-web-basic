@@ -1,5 +1,6 @@
 package com.spring.basic.chap3_2.entity;
 
+import com.spring.basic.chap5_3.dto.request.MemberCreateDto;
 import lombok.*;
 
 import java.util.UUID;
@@ -18,7 +19,13 @@ public class Member {
     private String password;
     private String nickname;
 
-
+    // DTO를 Entity로 변환하는 생성자
+    public Member(MemberCreateDto dto) {
+        this.uid = UUID.randomUUID().toString();
+        this.account = dto.getUserAcc();
+        this.password = dto.getPw();
+        this.nickname = dto.getNick();
+    }
     // 빌더 패턴 구현 - 생성자를 대체하는 것
     // 싱글톤 패턴, 빌더 패턴
 

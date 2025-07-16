@@ -1,0 +1,191 @@
+/* 웹 폰트 (Noto Sans KR) 불러오기 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+/* --- 1. 전역 변수 및 기본 스타일 --- */
+:root {
+    --primary-color: #3B82F6; /* 메인 파란색 */
+    --primary-hover-color: #2563EB;
+    --danger-color: #EF4444;  /* 삭제 빨간색 */
+    --danger-hover-color: #DC2626;
+    --text-color: #374151; /* 기본 텍스트 색상 */
+    --secondary-text-color: #6B7280; /* 보조 텍스트 색상 */
+    --bg-color: #F3F4F6;      /* 페이지 배경색 */
+    --item-bg-color: #FFFFFF;  /* 할 일 아이템 배경색 */
+    --border-color: #E5E7EB;   /* 테두리 색상 */
+    --checked-color: #9CA3AF;  /* 완료된 할 일 텍스트 색상 */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* 컨테이너가 위쪽에 붙도록 */
+    min-height: 100vh;
+    padding-top: 5vh;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+}
+
+/* --- 2. 전체 컨테이너 --- */
+.todo-container {
+    width: 100%;
+    max-width: 550px;
+    background-color: var(--item-bg-color);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+/* --- 3. 헤더 --- */
+.app-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.main-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* --- 4. 새 할 일 입력 폼 --- */
+#todo-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#todo-input {
+    flex-grow: 1;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+#todo-input:focus {
+    border-color: var(--primary-color);
+}
+
+.add-button {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    font-size: 28px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 10px;
+    transition: background-color 0.2s;
+}
+
+.add-button:hover {
+    background-color: var(--primary-hover-color);
+}
+
+/* --- 5. 할 일 목록 --- */
+.todos {
+    min-height: 200px;
+    max-height: 40vh;
+    overflow-y: auto;
+}
+
+#todo-list {
+    list-style: none;
+}
+
+.todo-item {
+    margin-bottom: 10px;
+}
+
+/* 할 일이 완료되었을 때의 스타일 */
+.todo-item.completed .todo-text {
+    text-decoration: line-through;
+    color: var(--checked-color);
+}
+
+.item-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: var(--bg-color);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.todo-check {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.todo-text {
+    flex-grow: 1;
+    font-size: 16px;
+}
+
+.delete-button {
+    font-size: 18px;
+    color: var(--secondary-text-color);
+    transition: color 0.2s;
+}
+
+.delete-button:hover {
+    color: var(--danger-color);
+}
+
+/* --- 6. 푸터 (필터 및 관리) --- */
+.app-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    font-size: 14px;
+    color: var(--secondary-text-color);
+}
+
+.filters button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    color: var(--secondary-text-color);
+    font-weight: 700;
+    transition: all 0.2s;
+}
+
+.filters button:hover {
+    color: var(--text-color);
+    background-color: #e5e7eb;
+}
+
+/* 현재 활성화된 필터 버튼 스타일 */
+.filters button.active {
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    background: none;
+}
+
+.clear-button {
+    color: var(--secondary-text-color);
+    font-weight: 700;
+}
+
+.clear-button:hover {
+    color: var(—danger-color);
+}

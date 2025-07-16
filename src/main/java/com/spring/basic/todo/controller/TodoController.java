@@ -1,6 +1,7 @@
 package com.spring.basic.todo.controller;
 
 import com.spring.basic.todo.entity.Todo;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/practice/todos")
 public class TodoController {
 
@@ -24,8 +25,15 @@ public class TodoController {
         todoId++;
     }
 
+    // 페이지 라우팅
+    @GetMapping("/todo-page")
+    public String todoPage() {
+        return "/practice/todo-page";
+    }
+
     // todo 리스트 조회하기
     @GetMapping
+    @ResponseBody
     public List<Todo> getAllTodo() {
         /*List<Todo> todos = new ArrayList<>();
         for(Todo todo : todoList.values()){
@@ -37,6 +45,7 @@ public class TodoController {
 
     // todo 추가하기
     @PostMapping
+    @ResponseBody
     public Todo addTodo(@RequestParam String content) {
         Todo newTodo = new Todo(todoId, content, false);
         todoList.put(todoId, newTodo);
