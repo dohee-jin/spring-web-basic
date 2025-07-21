@@ -4,8 +4,7 @@ package com.spring.basic.score.dto.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.spring.basic.score.entity.Score;
 import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 @Getter @Setter @ToString
@@ -18,21 +17,24 @@ import lombok.*;
 public class scoreWriteDTO {
 
     @JsonProperty("studentName")
-    @NotBlank(message = "학생이름은 필수입니다.")
+
+    // 공백, null을 모두 확인해줌
+    @NotEmpty(message = "학생이름은 필수입니다.")
+    //@NotBlank()
     private String name;
 
     @JsonProperty("korean")
-    @NotNull(message = "성적 입력은 필수입니다.")
+    @NotEmpty(message = "성적 입력은 필수입니다.")
     @Max(100)
     private Integer kor;
 
     @JsonProperty("english")
-    @NotNull(message = "성적 입력은 필수입니다.")
+    @NotEmpty(message = "성적 입력은 필수입니다.")
     @Max(100)
     private Integer eng;
 
     @JsonProperty("math")
-    @NotNull(message = "성적 입력은 필수입니다.")
+    @NotEmpty(message = "성적 입력은 필수입니다.")
     @Max(100)
     private Integer math;
 

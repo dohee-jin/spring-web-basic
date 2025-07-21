@@ -16,4 +16,10 @@ public class Score {
     private int total; // 총점
     private double average; // 평균
 
+
+    // 총점 평균을 구하는 메소드
+    private void calcTotalAndAverage() {
+
+    }
+
 }
