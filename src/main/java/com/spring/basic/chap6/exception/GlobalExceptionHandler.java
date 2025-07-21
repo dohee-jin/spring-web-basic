@@ -5,6 +5,7 @@ import com.spring.basic.chap6.exception.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -36,5 +37,22 @@ public class GlobalExceptionHandler {
 
         // 에러 응답 처리
         return ResponseEntity.status(e.getStatus()).body(errorResponse);
+    }
+
+    // 입력값 검증 에러 통합 처리
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleBindingError(
+            MethodArgumentNotValidException e,
+            HttpServletRequest request
+    ) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .error(e.getStatusCode().toString())
+                .status(e.getStatusCode().value())
+                .message(e.getBindingResult().getFieldError().getDefaultMessage())
+                .build();
+
+        return ResponseEntity.status(e.getStatusCode().value()).body(errorResponse);
     }
 }
